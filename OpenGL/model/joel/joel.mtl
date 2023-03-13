@@ -1,0 +1,155 @@
+# Blender 3.4.1 MTL File: 'None'
+# www.blender.org
+
+newmtl Model001_Material001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material001_baseColor.png
+map_Bump -bm 1.000000 Model001_Material001_normal.png
+
+newmtl Model001_Material002
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material002_baseColor.png
+map_Bump -bm 1.000000 Model001_Material002_normal.png
+
+newmtl Model001_Material003
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material003_baseColor.png
+map_Bump -bm 1.000000 Model001_Material003_normal.png
+
+newmtl Model001_Material004
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material004_baseColor.png
+map_Bump -bm 1.000000 Model001_Material004_normal.png
+
+newmtl Model001_Material005
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material005_baseColor.png
+map_Bump -bm 1.000000 Model001_Material005_normal.png
+
+newmtl Model001_Material006
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material006_baseColor.png
+map_Bump -bm 1.000000 Model001_Material006_normal.png
+
+newmtl Model001_Material007
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material007_baseColor.png
+map_Bump -bm 1.000000 Model001_Material007_normal.png
+
+newmtl Model001_Material008
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material008_baseColor.png
+map_Bump -bm 1.000000 Model001_Material008_normal.png
+
+newmtl Model001_Material009
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material009_baseColor.png
+map_Bump -bm 1.000000 Model001_Material009_normal.png
+
+newmtl Model001_Material010
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material010_baseColor.png
+map_Bump -bm 1.000000 Model001_Material010_normal.png
+
+newmtl Model001_Material011
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material011_baseColor.png
+map_Bump -bm 1.000000 Model001_Material006_normal.png
+
+newmtl Model001_Material012
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material012_baseColor.png
+map_Bump -bm 1.000000 Model001_Material012_normal.png
+
+newmtl Model001_Material013
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material013_baseColor.png
+map_Bump -bm 1.000000 Model001_Material013_normal.png
+
+newmtl Model001_Material014
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Model001_Material014_baseColor.png

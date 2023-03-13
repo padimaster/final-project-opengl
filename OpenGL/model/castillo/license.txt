@@ -1,0 +1,11 @@
+Model Information:
+* title:	Castillo de Oropesa | TOLEDO
+* source:	https://sketchfab.com/3d-models/castillo-de-oropesa-toledo-5730522e21b542eeb05229be5c021fb3
+* author:	Arqueomodel3D (https://sketchfab.com/juanbrualla)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Castillo de Oropesa | TOLEDO" (https://sketchfab.com/3d-models/castillo-de-oropesa-toledo-5730522e21b542eeb05229be5c021fb3) by Arqueomodel3D (https://sketchfab.com/juanbrualla) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
