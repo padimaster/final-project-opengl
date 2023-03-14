@@ -15,11 +15,18 @@
 #define STB_IMAGE_IMPLEMENTATION 
 #include <learnopengl/stb_image.h>
 
+struct ModelProps {
+	float x;
+	float y;
+	float z;
+    float scale;
+};
+
 //DEFINICIÓN DEL PROTOTIPO DE FUNCIONES
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow *window);
+void processInput(GLFWwindow* window);
 
 // TAMAÑO DE LA VENTANA
 const unsigned int SCR_WIDTH = 1600;
@@ -33,6 +40,22 @@ bool firstMouse = true;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+float sensivity = 0.0001f;
+
+ModelProps modelProps[] = {
+    // x, y, z, factor scale
+    // Castle
+    { 0.0f, 40.0f, 0.0f , 3.5f },
+    // Zombie
+    { 10.0f, -21.4f, 9.0f, 1.0f },
+    // Joel
+    { 5.0f, -28.0f, 15.0f, 1.0f },
+	// Moon
+    { 12.5f, 25.0f, 15.0f, 0.05f},
+    // Helicopter
+    { -10.0f, 15.0f, 15.0f, 0.005f },
+};
 
 int main()
 {
@@ -75,59 +98,70 @@ int main()
     //CARGA DE SHADERS PARA LOS DIFERENTES PROGRAMAS
     Shader ourShader("shaders/shader_models.vs", "shaders/shader_models.fs");
     Shader lightCubeShader("shaders/shader_lightcube.vs", "shaders/shader_lightcube.fs");
-   
+
     //CARGA DE MODELOS
-   
-    Model ourModel("./model/castillo/castillo.obj");
-    Model ourModel2("./model/zombie/zombie.obj");
-    Model ourModel3("./model/joel/joel.obj");
-    Model ourModel4("./model/luna/luna.obj");
-    Model ourModel5("./model/helicopter/helicopter.obj");
-    
+    Model ourCastle("./model/castillo/castillo.obj");
+    Model ourZombie("./model/zombie/zombie.obj");
+    Model ourJoel("./model/joel/joel.obj");
+    Model ourMoon("./model/luna/luna.obj");
+    Model ourHelicopterWithoutBlades("./model/helicopter/helicopter_without_blades.obj");
+    Model ourBlades("./model/helicopter/blades.obj");
+    Model ourTailBlades("./model/helicopter/tail_blades.obj");
+
+	Model ourModels[] = {
+		ourCastle,
+		ourZombie,
+		ourJoel,
+		ourMoon,
+		ourHelicopterWithoutBlades,
+		ourBlades,
+		ourTailBlades
+	};
+
     //VERTICES PARA DIBUJAR EL RAYO DE LUZ
     float vertices[] = {
-                  
-        -0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f, -0.5f,  
-         0.5f,  0.5f, -0.5f,  
-         0.5f,  0.5f, -0.5f,  
-        -0.5f,  0.5f, -0.5f,  
-        -0.5f, -0.5f, -0.5f,  
 
-        -0.5f, -0.5f,  0.5f,  
-         0.5f, -0.5f,  0.5f,  
-         0.5f,  0.5f,  0.5f,  
-         0.5f,  0.5f,  0.5f,  
-        -0.5f,  0.5f,  0.5f,  
-        -0.5f, -0.5f,  0.5f,  
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
 
-        -0.5f,  0.5f,  0.5f, 
-        -0.5f,  0.5f, -0.5f, 
-        -0.5f, -0.5f, -0.5f, 
-        -0.5f, -0.5f, -0.5f, 
-        -0.5f, -0.5f,  0.5f, 
-        -0.5f,  0.5f,  0.5f, 
+        -0.5f, -0.5f,  0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
 
-         0.5f,  0.5f,  0.5f,  
-         0.5f,  0.5f, -0.5f,  
-         0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f,  0.5f,  
-         0.5f,  0.5f,  0.5f,  
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
 
-        -0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f,  0.5f,  
-         0.5f, -0.5f,  0.5f,  
-        -0.5f, -0.5f,  0.5f,  
-        -0.5f, -0.5f, -0.5f,  
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
 
-        -0.5f,  0.5f, -0.5f,  
-         0.5f,  0.5f, -0.5f,  
-         0.5f,  0.5f,  0.5f,  
-         0.5f,  0.5f,  0.5f,  
-        -0.5f,  0.5f,  0.5f,  
-        -0.5f,  0.5f, -0.5f,  
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f, -0.5f,
+
+        -0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
     };
 
     //POSICIONES DE LOS POINT LIGHTS
@@ -139,12 +173,12 @@ int main()
         glm::vec3(5.0f, -28.0f, 15.0f)
     };
 
- 
-   //MODIFICACIÓN DE LA VELOCIDAD DE MOVIMIENTO DE LA CÁMARA
-    camera.MovementSpeed = 10; 
-   
+
+    //MODIFICACIÓN DE LA VELOCIDAD DE MOVIMIENTO DE LA CÁMARA
+    camera.MovementSpeed = 10;
+
     //GENERACIÓN DE VAO Y VBO
-    unsigned int lightCubeVAO,VBO;
+    unsigned int lightCubeVAO, VBO;
     glGenVertexArrays(1, &lightCubeVAO);
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -154,11 +188,12 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
     //MANERA DE LEER LOS DATOS (SOLO POSICIONES, POR TANTO STRIDE = 0)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,  0 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    // Obtener el tiempo de inicio
+    float startTime = glfwGetTime();
     // render loop
-  
     while (!glfwWindowShouldClose(window))
     {
         //VARIABLES PARA CONFIGURAR LA VELOCIDAD DE LA CÁMARA INDEPENDIENTE DEL HARDWARE
@@ -182,16 +217,16 @@ int main()
         //ASIGNACIÓN DEL VALOR DE SHININESS PARA LOS OBJETOS
         ourShader.setFloat("material.shininess", 32.0f);
 
-        
+
         //CAMBIO DE POSICIÓN DEL PLANETA EN EL PLANO XZ, CON UN RADIO DE 120
         float radioPlaneta = 120.0f;
-        float planetaX = sin(glfwGetTime())*0.3 * radioPlaneta;
-        float planetaZ = cos(glfwGetTime()) *0.3* radioPlaneta;
+        float planetaX = sin(glfwGetTime()) * 0.3 * radioPlaneta;
+        float planetaZ = cos(glfwGetTime()) * 0.3 * radioPlaneta;
 
         //CAMBIO DE DIRECCIÓN DE DIRECCIÓN HACIA A DONDE APUNTA LA SPOTLIGHT (LINTERNA)
         float radius = 0.3f;
-        float camX = (sin(glfwGetTime())/2) * radius;
-        float camZ = (cos(glfwGetTime())/2) * radius;
+        float camX = (sin(glfwGetTime()) / 2) * radius;
+        float camZ = (cos(glfwGetTime()) / 2) * radius;
 
         //ASIGNACIÓN DE LOS VALORES PARA LA LUZ DIRECCIONAL
         ourShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
@@ -202,7 +237,7 @@ int main()
 
         //ASIGNACIÓN DE VALORES PARA LAS DIFERENTES POINTLIGHTS
         //SE UTILIZA LAS POSICIONES DEFINIDAS EN EL ARREGLO DECLARADO ANTERIORMENTE
-        
+
         // point light 1
         ourShader.setVec3("pointLights[0].position", lightPositions[0]);
         ourShader.setVec3("pointLights[0].ambient", 0.5f, 0.5f, 0.5f);
@@ -247,11 +282,11 @@ int main()
         ourShader.setFloat("pointLights[4].constant", 1.0f);
         ourShader.setFloat("pointLights[4].linear", 0.09);
         ourShader.setFloat("pointLights[4].quadratic", 0.032);
-        
+
 
         //DEFINICIÓN DEL POINT LIGHT QUE SE MUEVE JUNTO CON EL LUNA (EMITE LUZ BLANCA)
         ourShader.setVec3("pointLights[5].position", glm::vec3(12.5f, 25.0f, 15.0f));//planetaX, 25.0f, planetaZ
-        ourShader.setVec3("pointLights[5].ambient",0.3f, 0.3f, 0.3f);
+        ourShader.setVec3("pointLights[5].ambient", 0.3f, 0.3f, 0.3f);
         ourShader.setVec3("pointLights[5].diffuse", 1.0f, 1.0f, 1.0f);
         ourShader.setVec3("pointLights[5].specular", 1.0f, 1.0f, 1.0f);
         ourShader.setFloat("pointLights[5].constant", 1.0f);
@@ -259,7 +294,7 @@ int main()
         ourShader.setFloat("pointLights[5].quadratic", 0.0075);
 
         //DEFINICIÓN DE LOS VALORES PARA EL SPOTLIGHT DEL HELICOPTERO
-        
+
         ourShader.setVec3("spotLight.position", glm::vec3(-10.0f, 15.0f, 15.0f));
         ourShader.setVec3("spotLight.direction", glm::vec3(camX, -1.0f, camZ));
         ourShader.setVec3("spotLight.ambient", 0.3f, 0.3f, 0.3f);
@@ -276,46 +311,51 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
+        //                                      GRAFICACIÓN DE MODELOS
 
-            //                                      GRAFICACIÓN DE MODELOS
+    //SE ESTABLECE LA MATRIZ MODEL PARA CADA MODELO CON DIFERENTES MOVIMIENTOS DE TRASLACIÓN, ROTACIÓN Y ESCALAMIENTO
+    // 
+    // 
+        const int numberOfModels = sizeof(modelProps) / sizeof(ModelProps);
+        for (int i = 0; i < numberOfModels; i++)
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(modelProps[i].x, modelProps[i].y, modelProps[i].z));
+            model = glm::scale(model, glm::vec3(modelProps[i].scale, modelProps[i].scale, modelProps[i].scale));
+            ourShader.setMat4("model", model);
+            ourModels[i].Draw(ourShader);
 
-        //SE ESTABLECE LA MATRIZ MODEL PARA CADA MODELO CON DIFERENTES MOVIMIENTOS DE TRASLACIÓN, ROTACIÓN Y ESCALAMIENTO
-        
-        //CASTILLO
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 40.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));	
-        ourShader.setMat4("model", model);
-        ourModel.Draw(ourShader);
-        
-        //ZOMBIE
-        glm::mat4 model2 = glm::mat4(1.0f);
-        model2 = glm::translate(model2, glm::vec3(10.0f, -21.4f, 9.0f));
-        model2 = glm::scale(model2, glm::vec3(1.0f, 1.0f, 1.0f));
-        ourShader.setMat4("model", model2);
-        ourModel2.Draw(ourShader);
-        
-        //JOEL
-        glm::mat4 model3 = glm::mat4(1.0f);
-        model3 = glm::translate(model3, glm::vec3(5.0f, -28.0f, 15.0f));
-        model3 = glm::scale(model3, glm::vec3(1.0f, 1.0f, 1.0f));
-        ourShader.setMat4("model", model3);
-        ourModel3.Draw(ourShader);
+            // Helicopter
+            if (i == 4) {
+                for (int j = 1; j < 3; j++)
+                {
+                    glm::mat4 model = glm::mat4(1.0f);
+                    model = glm::translate(model, glm::vec3(modelProps[i].x, modelProps[i].y, modelProps[i].z));
+                    model = glm::scale(model, glm::vec3(modelProps[i].scale, modelProps[i].scale, modelProps[i].scale));
 
-        //LUNA
-        glm::mat4 model4 = glm::mat4(1.0f);
-        model4 = glm::translate(model4, glm::vec3(12.5f, 25.0f, 15.0f));
-        model4 = glm::scale(model4, glm::vec3(0.05f, 0.05f, 0.05f));
-        ourShader.setMat4("model", model4);
-        ourModel4.Draw(ourShader);
+                    // Guardar la matriz de modelo original
+                    glm::mat4 originalModel = model;
 
-        //HELICOPTERO
-        glm::mat4 model5 = glm::mat4(1.0f);
-        model5 = glm::translate(model5, glm::vec3(-10.0f, 15.0f, 15.0f));
-        model5 = glm::scale(model5, glm::vec3(0.005f, 0.005f, 0.005f));
-        ourShader.setMat4("model", model5);
-        ourModel5.Draw(ourShader);
-                
+                    float angle = glfwGetTime() * 10.0f;
+                    // Rotar la hélice
+                    if (j == 1) {
+                        glm::vec3 bladePos = glm::vec3(modelProps[i].x, modelProps[i].y + 0.5f, modelProps[i].z);
+                        model = glm::translate(model, bladePos);
+                        model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+                        model = glm::translate(model, -bladePos);
+                    }
+
+                    // Restaurar la matriz de modelo original
+                    if (j == 2) {
+                        model = originalModel;
+                    }
+
+                    ourShader.setMat4("model", model);
+                    ourModels[i + j].Draw(ourShader);
+
+                }
+            }
+        }
 
         lightCubeShader.use();
         lightCubeShader.setMat4("projection", projection);
@@ -324,14 +364,14 @@ int main()
         //SE ACTIVA EL NUEVO VAO
         glBindVertexArray(lightCubeVAO);
 
-       
+
         // LIMPIRAR BUFFERS Y PROCESAR CAPTURAS PENDIENTES
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    
-      //Limpiar los buffers de la GPU y terminar de usar glfw
+
+    //Limpiar los buffers de la GPU y terminar de usar glfw
     glDeleteVertexArrays(1, &lightCubeVAO);
     glDeleteBuffers(1, &VBO);
     glfwTerminate();
@@ -340,7 +380,7 @@ int main()
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow *window)
+void processInput(GLFWwindow* window)
 {
 
     //SE PROCESA EL INPUT DEL MOVIMIENTO DE LA CÁMARA 
@@ -362,12 +402,9 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        camera.Position.y = camera.Position.y + 1.0f;
+        camera.Position.y = camera.Position.y + sensivity;
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        camera.Position.y = camera.Position.y - 1.0f;
-  
-       
-   
+        camera.Position.y = camera.Position.y - sensivity;
 }
 
 // ADAPTAR EL VIEWPORT AL TAMAÑO DE LA VENTANA

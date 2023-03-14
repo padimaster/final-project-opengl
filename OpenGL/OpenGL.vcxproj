@@ -134,10 +134,11 @@
   <ItemGroup>
     <ClCompile Include="..\OpenGL_Stuff\Library\glad.c" />
     <ClCompile Include="ExamenBimestral2.cpp" />
+    <ClCompile Include="ObjectModel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\shader_exercise16_mloading.fs" />
-    <None Include="shaders\shader_exercise16_mloading.vs" />
+    <None Include="shaders\shader_models.fs" />
+    <None Include="shaders\shader_models.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
