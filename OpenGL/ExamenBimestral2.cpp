@@ -41,7 +41,7 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-float sensivity = 0.0001f;
+float sensivity = 0.005f;
 
 ModelProps modelProps[] = {
     // x, y, z, factor scale
@@ -315,7 +315,7 @@ int main()
 
     //SE ESTABLECE LA MATRIZ MODEL PARA CADA MODELO CON DIFERENTES MOVIMIENTOS DE TRASLACIÓN, ROTACIÓN Y ESCALAMIENTO
     // 
-    // 
+
         const int numberOfModels = sizeof(modelProps) / sizeof(ModelProps);
         for (int i = 0; i < numberOfModels; i++)
         {
@@ -327,33 +327,22 @@ int main()
 
             // Helicopter
             if (i == 4) {
-                for (int j = 1; j < 3; j++)
-                {
-                    glm::mat4 model = glm::mat4(1.0f);
-                    model = glm::translate(model, glm::vec3(modelProps[i].x, modelProps[i].y, modelProps[i].z));
-                    model = glm::scale(model, glm::vec3(modelProps[i].scale, modelProps[i].scale, modelProps[i].scale));
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, glm::vec3(modelProps[i].x, modelProps[i].y, modelProps[i].z));
+                model = glm::scale(model, glm::vec3(modelProps[i].scale, modelProps[i].scale, modelProps[i].scale));
 
-                    // Guardar la matriz de modelo original
-                    glm::mat4 originalModel = model;
+                // Guardar la matriz de modelo original
+                glm::mat4 originalModel = model;
 
-                    float angle = glfwGetTime() * 10.0f;
-                    // Rotar la hélice
-                    if (j == 1) {
-                        glm::vec3 bladePos = glm::vec3(modelProps[i].x, modelProps[i].y + 0.5f, modelProps[i].z);
-                        model = glm::translate(model, bladePos);
-                        model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
-                        model = glm::translate(model, -bladePos);
-                    }
+                float angle = glfwGetTime() * 10.0f;
+                // Rotar la hélice
+                glm::vec3 bladePos = glm::vec3(modelProps[i].x, modelProps[i].y + 0.5f, modelProps[i].z);
+                model = glm::translate(model, bladePos);
+                model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+                model = glm::translate(model, -bladePos);
 
-                    // Restaurar la matriz de modelo original
-                    if (j == 2) {
-                        model = originalModel;
-                    }
-
-                    ourShader.setMat4("model", model);
-                    ourModels[i + j].Draw(ourShader);
-
-                }
+                ourShader.setMat4("model", model);
+                ourModels[i + 1].Draw(ourShader);
             }
         }
 
