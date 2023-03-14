@@ -114,8 +114,10 @@ int main()
 		ourJoel,
 		ourMoon,
 		ourHelicopterWithoutBlades,
-		ourBlades,
-		ourTailBlades
+        // Añadir nuevos modelos
+
+        // No añadir más
+		ourBlades
 	};
 
     //VERTICES PARA DIBUJAR EL RAYO DE LUZ
@@ -326,7 +328,7 @@ int main()
             ourModels[i].Draw(ourShader);
 
             // Helicopter
-            if (i == 4) {
+            if (i == numberOfModels - 1) {
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, glm::vec3(modelProps[i].x, modelProps[i].y, modelProps[i].z));
                 model = glm::scale(model, glm::vec3(modelProps[i].scale, modelProps[i].scale, modelProps[i].scale));
