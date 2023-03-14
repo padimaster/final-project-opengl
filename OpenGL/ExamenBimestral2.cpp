@@ -246,29 +246,29 @@ int main()
         // point light 1
         ourShader.setVec3("pointLights[0].position", lightPositions[0]);
         ourShader.setVec3("pointLights[0].ambient", 0.5f, 0.5f, 0.5f);
-        ourShader.setVec3("pointLights[0].diffuse", 1.0f, 0.65f, 0.0f);
+        ourShader.setVec3("pointLights[0].diffuse", 1.0f, 1.0f, 1.0f);
         ourShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
         ourShader.setFloat("pointLights[0].constant", 1.0f);
-        ourShader.setFloat("pointLights[0].linear", 0.09);
-        ourShader.setFloat("pointLights[0].quadratic", 0.032);
+        ourShader.setFloat("pointLights[0].linear", 0.22);
+        ourShader.setFloat("pointLights[0].quadratic", 0.20);
 
         // point light 2
         ourShader.setVec3("pointLights[1].position", lightPositions[1]);
         ourShader.setVec3("pointLights[1].ambient", 0.5f, 0.5f, 0.5f);
-        ourShader.setVec3("pointLights[1].diffuse", 1.0f, 0.65f, 0.0f);
+        ourShader.setVec3("pointLights[1].diffuse", 1.0f, 1.0f, 1.0f);
         ourShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
         ourShader.setFloat("pointLights[1].constant", 1.0f);
-        ourShader.setFloat("pointLights[1].linear", 0.09);
-        ourShader.setFloat("pointLights[1].quadratic", 0.032);
+        ourShader.setFloat("pointLights[1].linear", 0.22);
+        ourShader.setFloat("pointLights[1].quadratic", 0.20);
 
         // point light 3
         ourShader.setVec3("pointLights[2].position", lightPositions[2]);
         ourShader.setVec3("pointLights[2].ambient", 0.5f, 0.5f, 0.5f);
-        ourShader.setVec3("pointLights[2].diffuse", 1.0f, 0.65f, 0.0f);
+        ourShader.setVec3("pointLights[2].diffuse", 1.0f, 1.0f, 1.0f);
         ourShader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
         ourShader.setFloat("pointLights[2].constant", 1.0f);
-        ourShader.setFloat("pointLights[2].linear", 0.09);
-        ourShader.setFloat("pointLights[2].quadratic", 0.032);
+        ourShader.setFloat("pointLights[2].linear", 0.22);
+        ourShader.setFloat("pointLights[2].quadratic", 0.20);
 
         // point light 4
         ourShader.setVec3("pointLights[3].position", lightPositions[3]);
