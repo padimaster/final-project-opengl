@@ -291,8 +291,8 @@ int main()
     helicopterSpotLight.linear = 0.014f;
     helicopterSpotLight.quadratic = 0.0007f;
     helicopterSpotLight.direction = glm::vec3(0.0f, -0.2f, -1.0f);
-    helicopterSpotLight.cutOff = glm::cos(glm::radians(8.5f));
-    helicopterSpotLight.outerCutOff = glm::cos(glm::radians(10.5f));
+    helicopterSpotLight.cutOff = glm::cos(glm::radians(6.5f));
+    helicopterSpotLight.outerCutOff = glm::cos(glm::radians(8.0f));
     // 
 
     //GENERACIÓN DE VAO Y VBO
