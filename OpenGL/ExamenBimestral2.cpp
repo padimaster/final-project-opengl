@@ -400,7 +400,6 @@ int main()
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, modelProps[i].position);
                 model = glm::scale(model, glm::vec3(modelProps[i].scale, modelProps[i].scale, modelProps[i].scale));
-                //model = glm::rotate(model, modelProps[i].angle, glm::vec3(0.0f, 1.0f, 0.0f));
 
                 //ANGULO DE ROTACION CON SU VELOCIDAD
                 float angle = currentFrame * 10.0f;
