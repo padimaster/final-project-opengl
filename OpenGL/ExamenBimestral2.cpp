@@ -178,10 +178,10 @@ int main()
 
     //POSICIONES DE LOS POINT LIGHTS
     glm::vec3 lightPositions[] = {
-        glm::vec3(3.5f, -28.2f, 15.0f),
-        glm::vec3(11.5f, -21.4f, 9.0f),
-        glm::vec3(19.5f, -30.0f, 15.0f),
-        glm::vec3(12.5f, 25.0f, 15.0f)
+        glm::vec3(3.5f, -28.2f, 15.0f), //cerca a joel
+        glm::vec3(11.5f, -21.4f, 9.0f), //cerca zombie
+        glm::vec3(19.5f, -30.0f, 15.0f), //cesped castillo
+        glm::vec3(12.5f, 25.0f, 15.0f) //luna
     };
 
 
@@ -245,7 +245,7 @@ int main()
         //ASIGNACIÓN DE VALORES PARA LAS DIFERENTES POINTLIGHTS
         //SE UTILIZA LAS POSICIONES DEFINIDAS EN EL ARREGLO DECLARADO ANTERIORMENTE
 
-        // point light 1
+        // point light 1 cerca a joel
         ourShader.setVec3("pointLights[0].position", lightPositions[0]);
         ourShader.setVec3("pointLights[0].ambient", 1.0f, 1.0f, 1.0f);
         ourShader.setVec3("pointLights[0].diffuse", 0.49f, 0.73f, 0.91f);
@@ -254,7 +254,7 @@ int main()
         ourShader.setFloat("pointLights[0].linear", 0.22);
         ourShader.setFloat("pointLights[0].quadratic", 0.20);
 
-        // point light 2
+        // point light 2 cerca a zombie
         ourShader.setVec3("pointLights[1].position", lightPositions[1]);
         ourShader.setVec3("pointLights[1].ambient", 0.5f, 0.5f, 0.5f);
         ourShader.setVec3("pointLights[1].diffuse", 0.49f, 0.73f, 0.91f);
@@ -263,7 +263,7 @@ int main()
         ourShader.setFloat("pointLights[1].linear", 0.22);
         ourShader.setFloat("pointLights[1].quadratic", 0.20);
 
-        // point light 3
+        // point light 3 cescep del castillo
         ourShader.setVec3("pointLights[2].position", lightPositions[2]);
         ourShader.setVec3("pointLights[2].ambient", 0.5f, 0.5f, 0.5f);
         ourShader.setVec3("pointLights[2].diffuse", 0.49f, 0.73f, 0.91f);
