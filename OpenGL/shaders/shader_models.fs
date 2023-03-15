@@ -46,7 +46,7 @@ struct SpotLight {
     vec3 specular;       
 };
 //NUMERO DE POINTLIGHTS
-#define NR_POINT_LIGHTS 6
+#define NR_POINT_LIGHTS 4
 
 //VARIABLES DE ENTRADA Y UNIFORMS
 in vec3 FragPos;

@@ -17,10 +17,9 @@
 
 //ESTRUCTURA DE VARIABLES
 struct ModelProps {
-    float x;
-    float y;
-    float z;
+    glm::vec3 position;
     float scale;
+    float angle;
 };
 
 struct PointLight {
@@ -31,6 +30,12 @@ struct PointLight {
 	float constant;
 	float linear;
 	float quadratic;
+};
+
+struct SpotLight : PointLight {
+    glm::vec3 direction;
+    float cutOff;
+    float outerCutOff;
 };
 
 //DEFINICIÓN DEL PROTOTIPO DE FUNCIONES
@@ -52,27 +57,66 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-float sensivity = 0.005f;
+float cameraSensivity = 0.01f;
+float sensivity = 0.0075f;
+
+int activeObject = 0;
 
 //POSICIONES DE LOS MODELOS
+//POSICIONES DE LOS MODELOS
 ModelProps modelProps[] = {
-    // x, y, z, factor scale
-    // Castle
-    { 0.0f, 40.0f, 0.0f , 3.5f },
-    // Zombie
-    { 10.0f, -21.4f, 9.0f, 1.0f },
-    // Joel
-    { 5.0f, -28.2f, 17.0f, 1.0f },
-    // Moon
-    { 15.0f, 25.0f, 15.0f, 0.05f},
-    // Lampara cerca joel
-    { 4.0f, -28.2f, 15.0f, 0.075f},
-    // Lampara cerca zombie
-    { 12.0f, -21.4f, 9.0f, 0.075f},
-    // Lampara en terreno
-    { 20.0f, -30.0f, 15.0f, 0.075f},
-    // Helicopter
-    { -10.0f, 15.0f, 15.0f, 0.005f },
+    // position, factor scale, angle
+    // Joel 0
+    { 
+        // Posicion
+        glm::vec3(5.0f, -28.2f, 17.0f), 
+        // Factor de Escala
+        1.0f, 
+        // Angulo de Rotacion
+        0.0f 
+    },
+    // Zombie 1
+    { 
+        glm::vec3(10.0f, -21.4f, 9.0f), 
+        1.0f, 
+        0.0f 
+    },
+    // Moon 2
+    { 
+        glm::vec3(15.0f, 25.0f, 15.0f), 
+        0.05f, 
+        0.0f 
+    },
+    // Castle 3
+    { 
+        glm::vec3(0.0f, 40.0f, 0.0f ), 
+        3.5f, 
+        0.0f 
+    },
+    // Lampara cerca joel 4
+    { 
+        glm::vec3(4.0f, -28.2f, 15.0f), 
+        0.075f, 
+        0.0f 
+    },
+    // Lampara cerca zombie 5
+    { 
+        glm::vec3(12.0f, -21.4f, 9.0f), 
+        0.075f, 
+        0.0f 
+    },
+    // Lampara en terreno 6
+    { 
+        glm::vec3(20.0f, -30.0f, 15.0f), 
+        0.075f, 
+        0.0f 
+    },
+    // Helicopter 7
+    { 
+        glm::vec3(-10.0f, 15.0f, 15.0f), 
+        0.005f, 
+        0.0f 
+    },
 };
 
 int main()
@@ -129,10 +173,10 @@ int main()
 
     //ARREGLO DE MODELOS
     Model ourModels[] = {
-        ourCastle,
-        ourZombie,
         ourJoel,
+        ourZombie,
         ourMoon,
+        ourCastle,
         ourLampara,
         ourLampara,
         ourLampara,
@@ -188,32 +232,29 @@ int main()
 
     // PROPIEDADES DE LOS POINT LIGHTS
     // point light cerca a joel
-    PointLight joelPointLight;
-    
-	joelPointLight.position = glm::vec3(3.5f, -28.2f, 15.0f);
-	joelPointLight.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
-	joelPointLight.diffuse = glm::vec3(0.49f, 0.73f, 0.91f);
-	joelPointLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
-	joelPointLight.constant = 1.0f;
-	joelPointLight.linear = 0.22f;
-	joelPointLight.quadratic = 0.20f;
-    
+    PointLight lampNearJoelPointLight;
+    lampNearJoelPointLight.position = modelProps[4].position;
+    lampNearJoelPointLight.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
+    lampNearJoelPointLight.diffuse = glm::vec3(0.49f, 0.73f, 0.91f);
+    lampNearJoelPointLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+    lampNearJoelPointLight.constant = 1.0f;
+    lampNearJoelPointLight.linear = 0.22f;
+    lampNearJoelPointLight.quadratic = 0.20f;
+
     // point light cerca a zombie
-    PointLight zombiePointLight;
-    
-    zombiePointLight.position = glm::vec3(3.5f, -28.2f, 15.0f);
-    zombiePointLight.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
-    zombiePointLight.diffuse = glm::vec3(0.49f, 0.73f, 0.91f);
-    zombiePointLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
-    zombiePointLight.constant = 1.0f;
-    zombiePointLight.linear = 0.22f;
-    zombiePointLight.quadratic = 0.20f;
-    
+    PointLight lampNearZombiePointLight;
+    lampNearZombiePointLight.position = modelProps[5].position;
+    lampNearZombiePointLight.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
+    lampNearZombiePointLight.diffuse = glm::vec3(0.49f, 0.73f, 0.91f);
+    lampNearZombiePointLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+    lampNearZombiePointLight.constant = 1.0f;
+    lampNearZombiePointLight.linear = 0.22f;
+    lampNearZombiePointLight.quadratic = 0.20f;
+
 
     // point light 3 cescep del castillo
     PointLight castlePointLight;
-
-    castlePointLight.position = glm::vec3(19.5f, -30.0f, 15.0f);
+    castlePointLight.position = modelProps[6].position;
     castlePointLight.ambient = glm::vec3(0.5f, 0.5f, 0.5f);
     castlePointLight.diffuse = glm::vec3(0.49f, 0.73f, 0.91f);
     castlePointLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -223,7 +264,6 @@ int main()
 
     // point light 4 LUNA
     PointLight moonPointLight;
-
     moonPointLight.position = glm::vec3(12.5f, 25.0f, 15.0f);
     moonPointLight.ambient = glm::vec3(0.5f, 0.5f, 0.5f);
     moonPointLight.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -232,13 +272,29 @@ int main()
     moonPointLight.linear = 0.014f;
     moonPointLight.quadratic = 0.0007;
 
-	PointLight pointLights[] = { 
-        joelPointLight, 
-        zombiePointLight, 
+    PointLight pointLights[] = {
+        lampNearJoelPointLight,
+        lampNearZombiePointLight,
         castlePointLight, 
         moonPointLight 
     };
     
+    const int numberOfModels = sizeof(modelProps) / sizeof(ModelProps);
+    const int pointLightNumber = sizeof(pointLights) / sizeof(PointLight);
+
+    SpotLight helicopterSpotLight;
+    helicopterSpotLight.position = modelProps[numberOfModels - 1].position;
+    helicopterSpotLight.ambient = glm::vec3(0.3f, 0.3f, 0.3f);
+    helicopterSpotLight.diffuse = glm::vec3(10.0f, 10.0f, 10.0f);
+    helicopterSpotLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+    helicopterSpotLight.constant = 1.0f;
+    helicopterSpotLight.linear = 0.014f;
+    helicopterSpotLight.quadratic = 0.0007f;
+    helicopterSpotLight.direction = glm::vec3(0.0f, -0.2f, -1.0f);
+    helicopterSpotLight.cutOff = glm::cos(glm::radians(8.5f));
+    helicopterSpotLight.outerCutOff = glm::cos(glm::radians(10.5f));
+    // 
+
     //GENERACIÓN DE VAO Y VBO
     unsigned int lightCubeVAO, VBO;
     glGenVertexArrays(1, &lightCubeVAO);
@@ -277,12 +333,6 @@ int main()
         //ASIGNACIÓN DEL VALOR DE SHININESS PARA LOS OBJETOS
         ourShader.setFloat("material.shininess", 32.0f);
 
-
-        //CAMBIO DE DIRECCIÓN DE DIRECCIÓN HACIA A DONDE APUNTA LA SPOTLIGHT (LINTERNA)
-        float radius = 0.3f;
-        float camX = (sin(glfwGetTime()) / 2) * radius;
-        float camZ = (cos(glfwGetTime()) / 2) * radius;
-
         //ASIGNACIÓN DE LOS VALORES PARA LA LUZ DIRECCIONAL
         /* posible eliminacion
         ourShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
@@ -293,7 +343,6 @@ int main()
 
         //ASIGNACIÓN DE VALORES PARA LAS DIFERENTES POINTLIGHTS
         //SE UTILIZA LAS POSICIONES DEFINIDAS EN EL ARREGLO DECLARADO ANTERIORMENTE
-		int pointLightNumber = sizeof(pointLights) / sizeof(PointLight);
         
         for (int i = 0; i < pointLightNumber; i++) {
             std::string lightStr = "pointLights[" + std::to_string(i) + "].";
@@ -305,19 +354,27 @@ int main()
             ourShader.setFloat(lightStr + "linear", pointLights[i].linear);
             ourShader.setFloat(lightStr + "quadratic", pointLights[i].quadratic);
         }
-        
+
+        //CAMBIO DE DIRECCIÓN DE DIRECCIÓN HACIA A DONDE APUNTA LA SPOTLIGHT (LINTERNA)
+        float radius = 0.3f;
+        float camX = (sin(glfwGetTime()) / 2) * radius;
+        float camZ = (cos(glfwGetTime()) / 2) * radius;
         
         //DEFINICIÓN DE LOS VALORES PARA EL SPOTLIGHT DEL HELICOPTERO
-        ourShader.setVec3("spotLight.position", glm::vec3(-10.0f, 15.0f, 15.0f));
-        ourShader.setVec3("spotLight.direction", glm::vec3(camX, -1.0f, camZ));
-        ourShader.setVec3("spotLight.ambient", glm::vec3(0.3f, 0.3f, 0.3f));
-        ourShader.setVec3("spotLight.diffuse", glm::vec3(10.0f, 10.0f, 10.0f));
-        ourShader.setVec3("spotLight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-        ourShader.setFloat("spotLight.constant", 1.0f);
-        ourShader.setFloat("spotLight.linear", 0.014);
-        ourShader.setFloat("spotLight.quadratic", 0.0007);
-        ourShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(6.5f)));
-        ourShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(7.5f)));
+        ourShader.setVec3("spotLight.ambient", helicopterSpotLight.ambient);
+        ourShader.setVec3("spotLight.diffuse", helicopterSpotLight.diffuse);
+        ourShader.setVec3("spotLight.specular", helicopterSpotLight.specular);
+        ourShader.setFloat("spotLight.constant", helicopterSpotLight.constant);
+        ourShader.setFloat("spotLight.linear", helicopterSpotLight.linear);
+        ourShader.setFloat("spotLight.quadratic", helicopterSpotLight.quadratic);
+        ourShader.setFloat("spotLight.cutOff", helicopterSpotLight.cutOff);
+        ourShader.setFloat("spotLight.outerCutOff", helicopterSpotLight.outerCutOff);
+        //Cambio de direccion del spotlight
+        helicopterSpotLight.position = modelProps[numberOfModels - 1].position;
+        ourShader.setVec3("spotLight.position", helicopterSpotLight.position);
+        //Cambio de direccion del spotlight
+        helicopterSpotLight.direction = glm::vec3(camX, -1.0f, camZ);
+        ourShader.setVec3("spotLight.direction", helicopterSpotLight.direction);
 
         // DEFINICIÓN DE LAS MATRICES DE VISTA Y PROYECCIÓN
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 500.0f);
@@ -329,33 +386,27 @@ int main()
     //SE ESTABLECE LA MATRIZ MODEL PARA CADA MODELO CON DIFERENTES MOVIMIENTOS DE TRASLACIÓN, ROTACIÓN Y ESCALAMIENTO
     // 
 
-        const int numberOfModels = sizeof(modelProps) / sizeof(ModelProps);
         for (int i = 0; i < numberOfModels; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, glm::vec3(modelProps[i].x, modelProps[i].y, modelProps[i].z));
+            model = glm::translate(model, modelProps[i].position);
             model = glm::scale(model, glm::vec3(modelProps[i].scale, modelProps[i].scale, modelProps[i].scale));
+            model = glm::rotate(model, modelProps[i].angle, glm::vec3(0.0f, 1.0f, 0.0f));
             ourShader.setMat4("model", model);
             ourModels[i].Draw(ourShader);
 
             // Helicopter
             if (i == numberOfModels - 1) {
                 glm::mat4 model = glm::mat4(1.0f);
-                model = glm::translate(model, glm::vec3(modelProps[i].x, modelProps[i].y, modelProps[i].z));
+                model = glm::translate(model, modelProps[i].position);
                 model = glm::scale(model, glm::vec3(modelProps[i].scale, modelProps[i].scale, modelProps[i].scale));
-
-                // Guardar la matriz de modelo original
-                glm::mat4 originalModel = model;
+                //model = glm::rotate(model, modelProps[i].angle, glm::vec3(0.0f, 1.0f, 0.0f));
 
                 //ANGULO DE ROTACION CON SU VELOCIDAD
                 float angle = currentFrame * 10.0f;
 
                 // Rotar la hélice
-                glm::vec3 bladePos = glm::vec3(modelProps[i].x, modelProps[i].y + 0.5f, modelProps[i].z);
-                model = glm::translate(model, bladePos);
                 model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
-                model = glm::translate(model, -bladePos);
-
                 ourShader.setMat4("model", model);
                 ourModels[i + 1].Draw(ourShader);
             }
@@ -396,19 +447,40 @@ void processInput(GLFWwindow* window)
     //LEFT SHIFT -> HACIA ABAJO
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+        camera.ProcessKeyboard(FORWARD, cameraSensivity);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+        camera.ProcessKeyboard(BACKWARD, cameraSensivity);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        camera.ProcessKeyboard(LEFT, cameraSensivity);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+        camera.ProcessKeyboard(RIGHT, cameraSensivity);
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
         camera.Position.y = camera.Position.y + sensivity;
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         camera.Position.y = camera.Position.y - sensivity;
+    // Movimiento de los Objetos
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        modelProps[activeObject].position.z = modelProps[activeObject].position.z + sensivity;
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        modelProps[activeObject].position.z = modelProps[activeObject].position.z - + sensivity;
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        modelProps[activeObject].position.x = modelProps[activeObject].position.x + sensivity;
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        modelProps[activeObject].position.x = modelProps[activeObject].position.x - sensivity;
+    if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
+        modelProps[activeObject].position.y = modelProps[activeObject].position.y + sensivity;
+    if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
+        modelProps[activeObject].position.y = modelProps[activeObject].position.y - sensivity;
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        modelProps[activeObject].angle = modelProps[activeObject].angle + sensivity;
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        modelProps[activeObject].angle = modelProps[activeObject].angle - sensivity;
+    // Change active object
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        activeObject = 0;
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        activeObject = 7;
 }
 
 // ADAPTAR EL VIEWPORT AL TAMAÑO DE LA VENTANA
@@ -419,7 +491,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 
 
-// CPATURAR EL MOVIMIENTO DEL MOUSE
+// CAPTURAR EL MOVIMIENTO DEL MOUSE
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
     if (firstMouse)
