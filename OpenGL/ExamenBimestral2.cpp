@@ -253,8 +253,6 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // Obtener el tiempo de inicio
-    float startTime = glfwGetTime();
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -350,7 +348,7 @@ int main()
                 glm::mat4 originalModel = model;
 
                 //ANGULO DE ROTACION CON SU VELOCIDAD
-                float angle = glfwGetTime() * 10.0f;
+                float angle = currentFrame * 10.0f;
 
                 // Rotar la hélice
                 glm::vec3 bladePos = glm::vec3(modelProps[i].x, modelProps[i].y + 0.5f, modelProps[i].z);
