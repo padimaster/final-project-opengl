@@ -15,6 +15,7 @@
 #define STB_IMAGE_IMPLEMENTATION 
 #include <learnopengl/stb_image.h>
 
+//ESTRUCTURA DE VARIABLES
 struct ModelProps {
     float x;
     float y;
@@ -43,7 +44,7 @@ float lastFrame = 0.0f;
 
 float sensivity = 0.005f;
 
-
+//POSICIONES DE LOS MODELOS
 ModelProps modelProps[] = {
     // x, y, z, factor scale
     // Castle
@@ -116,6 +117,7 @@ int main()
     Model ourTailBlades("./model/helicopter/tail_blades.obj");
     Model ourLampara("./model/lampara/lampara.obj");
 
+    //ARREGLO DE MODELOS
     Model ourModels[] = {
         ourCastle,
         ourZombie,
@@ -245,8 +247,8 @@ int main()
 
         // point light 1
         ourShader.setVec3("pointLights[0].position", lightPositions[0]);
-        ourShader.setVec3("pointLights[0].ambient", 0.5f, 0.5f, 0.5f);
-        ourShader.setVec3("pointLights[0].diffuse", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("pointLights[0].ambient", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("pointLights[0].diffuse", 0.49f, 0.73f, 0.91f);
         ourShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
         ourShader.setFloat("pointLights[0].constant", 1.0f);
         ourShader.setFloat("pointLights[0].linear", 0.22);
@@ -255,7 +257,7 @@ int main()
         // point light 2
         ourShader.setVec3("pointLights[1].position", lightPositions[1]);
         ourShader.setVec3("pointLights[1].ambient", 0.5f, 0.5f, 0.5f);
-        ourShader.setVec3("pointLights[1].diffuse", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("pointLights[1].diffuse", 0.49f, 0.73f, 0.91f);
         ourShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
         ourShader.setFloat("pointLights[1].constant", 1.0f);
         ourShader.setFloat("pointLights[1].linear", 0.22);
@@ -264,13 +266,13 @@ int main()
         // point light 3
         ourShader.setVec3("pointLights[2].position", lightPositions[2]);
         ourShader.setVec3("pointLights[2].ambient", 0.5f, 0.5f, 0.5f);
-        ourShader.setVec3("pointLights[2].diffuse", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("pointLights[2].diffuse", 0.49f, 0.73f, 0.91f);
         ourShader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
         ourShader.setFloat("pointLights[2].constant", 1.0f);
         ourShader.setFloat("pointLights[2].linear", 0.22);
         ourShader.setFloat("pointLights[2].quadratic", 0.20);
 
-        // point light 4
+        // point light 4 LUNA
         ourShader.setVec3("pointLights[3].position", lightPositions[3]);
         ourShader.setVec3("pointLights[3].ambient", 0.5f, 0.5f, 0.5f);
         ourShader.setVec3("pointLights[3].diffuse", 1.0f, 1.0f, 1.0f);
@@ -320,7 +322,9 @@ int main()
                 // Guardar la matriz de modelo original
                 glm::mat4 originalModel = model;
 
+                //ANGULO DE ROTACION CON SU VELOCIDAD
                 float angle = glfwGetTime() * 10.0f;
+                
                 // Rotar la hélice
                 glm::vec3 bladePos = glm::vec3(modelProps[i].x, modelProps[i].y + 0.5f, modelProps[i].z);
                 model = glm::translate(model, bladePos);
