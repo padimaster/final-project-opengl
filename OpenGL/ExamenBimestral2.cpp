@@ -23,6 +23,16 @@ struct ModelProps {
     float scale;
 };
 
+struct PointLight {
+	glm::vec3 position;
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+	float constant;
+	float linear;
+	float quadratic;
+};
+
 //DEFINICIÓN DEL PROTOTIPO DE FUNCIONES
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -176,18 +186,59 @@ int main()
         -0.5f,  0.5f, -0.5f,
     };
 
-    //POSICIONES DE LOS POINT LIGHTS
-    glm::vec3 lightPositions[] = {
-        glm::vec3(3.5f, -28.2f, 15.0f), //cerca a joel
-        glm::vec3(11.5f, -21.4f, 9.0f), //cerca zombie
-        glm::vec3(19.5f, -30.0f, 15.0f), //cesped castillo
-        glm::vec3(12.5f, 25.0f, 15.0f) //luna
+    // PROPIEDADES DE LOS POINT LIGHTS
+    // point light cerca a joel
+    PointLight joelPointLight;
+    
+	joelPointLight.position = glm::vec3(3.5f, -28.2f, 15.0f);
+	joelPointLight.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
+	joelPointLight.diffuse = glm::vec3(0.49f, 0.73f, 0.91f);
+	joelPointLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+	joelPointLight.constant = 1.0f;
+	joelPointLight.linear = 0.22f;
+	joelPointLight.quadratic = 0.20f;
+    
+    // point light cerca a zombie
+    PointLight zombiePointLight;
+    
+    zombiePointLight.position = glm::vec3(3.5f, -28.2f, 15.0f);
+    zombiePointLight.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
+    zombiePointLight.diffuse = glm::vec3(0.49f, 0.73f, 0.91f);
+    zombiePointLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+    zombiePointLight.constant = 1.0f;
+    zombiePointLight.linear = 0.22f;
+    zombiePointLight.quadratic = 0.20f;
+    
+
+    // point light 3 cescep del castillo
+    PointLight castlePointLight;
+
+    castlePointLight.position = glm::vec3(19.5f, -30.0f, 15.0f);
+    castlePointLight.ambient = glm::vec3(0.5f, 0.5f, 0.5f);
+    castlePointLight.diffuse = glm::vec3(0.49f, 0.73f, 0.91f);
+    castlePointLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+    castlePointLight.constant = 1.0f;
+    castlePointLight.linear = 0.22f;
+    castlePointLight.quadratic = 0.20f;
+
+    // point light 4 LUNA
+    PointLight moonPointLight;
+
+    moonPointLight.position = glm::vec3(12.5f, 25.0f, 15.0f);
+    moonPointLight.ambient = glm::vec3(0.5f, 0.5f, 0.5f);
+    moonPointLight.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+    moonPointLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+    moonPointLight.constant = 1.0f;
+    moonPointLight.linear = 0.014f;
+    moonPointLight.quadratic = 0.0007;
+
+	PointLight pointLights[] = { 
+        joelPointLight, 
+        zombiePointLight, 
+        castlePointLight, 
+        moonPointLight 
     };
-
-
-    //MODIFICACIÓN DE LA VELOCIDAD DE MOVIMIENTO DE LA CÁMARA
-    camera.MovementSpeed = 10;
-
+    
     //GENERACIÓN DE VAO Y VBO
     unsigned int lightCubeVAO, VBO;
     glGenVertexArrays(1, &lightCubeVAO);
@@ -228,7 +279,7 @@ int main()
         //ASIGNACIÓN DEL VALOR DE SHININESS PARA LOS OBJETOS
         ourShader.setFloat("material.shininess", 32.0f);
 
-                
+
         //CAMBIO DE DIRECCIÓN DE DIRECCIÓN HACIA A DONDE APUNTA LA SPOTLIGHT (LINTERNA)
         float radius = 0.3f;
         float camX = (sin(glfwGetTime()) / 2) * radius;
@@ -244,50 +295,26 @@ int main()
 
         //ASIGNACIÓN DE VALORES PARA LAS DIFERENTES POINTLIGHTS
         //SE UTILIZA LAS POSICIONES DEFINIDAS EN EL ARREGLO DECLARADO ANTERIORMENTE
-
-        // point light 1 cerca a joel
-        ourShader.setVec3("pointLights[0].position", lightPositions[0]);
-        ourShader.setVec3("pointLights[0].ambient", 1.0f, 1.0f, 1.0f);
-        ourShader.setVec3("pointLights[0].diffuse", 0.49f, 0.73f, 0.91f);
-        ourShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-        ourShader.setFloat("pointLights[0].constant", 1.0f);
-        ourShader.setFloat("pointLights[0].linear", 0.22);
-        ourShader.setFloat("pointLights[0].quadratic", 0.20);
-
-        // point light 2 cerca a zombie
-        ourShader.setVec3("pointLights[1].position", lightPositions[1]);
-        ourShader.setVec3("pointLights[1].ambient", 0.5f, 0.5f, 0.5f);
-        ourShader.setVec3("pointLights[1].diffuse", 0.49f, 0.73f, 0.91f);
-        ourShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-        ourShader.setFloat("pointLights[1].constant", 1.0f);
-        ourShader.setFloat("pointLights[1].linear", 0.22);
-        ourShader.setFloat("pointLights[1].quadratic", 0.20);
-
-        // point light 3 cescep del castillo
-        ourShader.setVec3("pointLights[2].position", lightPositions[2]);
-        ourShader.setVec3("pointLights[2].ambient", 0.5f, 0.5f, 0.5f);
-        ourShader.setVec3("pointLights[2].diffuse", 0.49f, 0.73f, 0.91f);
-        ourShader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
-        ourShader.setFloat("pointLights[2].constant", 1.0f);
-        ourShader.setFloat("pointLights[2].linear", 0.22);
-        ourShader.setFloat("pointLights[2].quadratic", 0.20);
-
-        // point light 4 LUNA
-        ourShader.setVec3("pointLights[3].position", lightPositions[3]);
-        ourShader.setVec3("pointLights[3].ambient", 0.5f, 0.5f, 0.5f);
-        ourShader.setVec3("pointLights[3].diffuse", 1.0f, 1.0f, 1.0f);
-        ourShader.setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
-        ourShader.setFloat("pointLights[3].constant", 1.0f);
-        ourShader.setFloat("pointLights[3].linear", 0.014);
-        ourShader.setFloat("pointLights[3].quadratic", 0.0007);
-
+		int pointLightNumber = sizeof(pointLights) / sizeof(PointLight);
+        
+        for (int i = 0; i < pointLightNumber; i++) {
+            std::string lightStr = "pointLights[" + std::to_string(i) + "].";
+            ourShader.setVec3(lightStr + "position", pointLights[i].position);
+            ourShader.setVec3(lightStr + "ambient", pointLights[i].ambient);
+            ourShader.setVec3(lightStr + "diffuse", pointLights[i].diffuse);
+            ourShader.setVec3(lightStr + "specular", pointLights[i].specular);
+            ourShader.setFloat(lightStr + "constant", pointLights[i].constant);
+            ourShader.setFloat(lightStr + "linear", pointLights[i].linear);
+            ourShader.setFloat(lightStr + "quadratic", pointLights[i].quadratic);
+        }
+        
+        
         //DEFINICIÓN DE LOS VALORES PARA EL SPOTLIGHT DEL HELICOPTERO
-
         ourShader.setVec3("spotLight.position", glm::vec3(-10.0f, 15.0f, 15.0f));
         ourShader.setVec3("spotLight.direction", glm::vec3(camX, -1.0f, camZ));
-        ourShader.setVec3("spotLight.ambient", 0.3f, 0.3f, 0.3f);
-        ourShader.setVec3("spotLight.diffuse", 10.0f, 10.0f, 10.0f);
-        ourShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("spotLight.ambient", glm::vec3(0.3f, 0.3f, 0.3f));
+        ourShader.setVec3("spotLight.diffuse", glm::vec3(10.0f, 10.0f, 10.0f));
+        ourShader.setVec3("spotLight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
         ourShader.setFloat("spotLight.constant", 1.0f);
         ourShader.setFloat("spotLight.linear", 0.014);
         ourShader.setFloat("spotLight.quadratic", 0.0007);
@@ -324,7 +351,7 @@ int main()
 
                 //ANGULO DE ROTACION CON SU VELOCIDAD
                 float angle = glfwGetTime() * 10.0f;
-                
+
                 // Rotar la hélice
                 glm::vec3 bladePos = glm::vec3(modelProps[i].x, modelProps[i].y + 0.5f, modelProps[i].z);
                 model = glm::translate(model, bladePos);
